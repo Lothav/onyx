@@ -35,19 +35,6 @@ SDL_Texture* LoadImage(SDL_Renderer* renderer, std::string file)
 	return texture;
 }
 
-const GLchar* vertexSource =
-        "attribute vec4 position;                  \n"
-        "void main()                               \n"
-        "{                                         \n"
-        "   gl_Position = vec4(position.xyz, 1.0); \n"
-        "}                                         \n";
-const GLchar* fragmentSource =
-        "precision mediump float;                     \n"
-        "void main()                                  \n"
-        "{                                            \n"
-        "  gl_FragColor = vec4 (1.0, 1.0, 1.0, 1.0 ); \n"
-        "}                                            \n";
-
 std::function<void()> loop;
 void main_loop() { loop(); }
 
@@ -73,8 +60,8 @@ int main(int argc, char* args[]) {
     vbo->copyDataToBuffer(vertices, sizeof(vertices));
 
     auto shader = new Renderer::Shader();
-    shader->createGraphicShader(GL_VERTEX_SHADER, vertexSource);
-    shader->createGraphicShader(GL_FRAGMENT_SHADER, fragmentSource);
+    shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
+    shader->createGraphicShader(GL_FRAGMENT_SHADER, "default.frag");
     shader->begin();
 
     loop =  [&]
@@ -100,6 +87,29 @@ int main(int argc, char* args[]) {
 #else
     while(true) main_loop();
 #endif
-    
+
+    //return 0;
+//
+	//bool quit = false;
+	//SDL_Event event = nullptr;
+	//while (!quit)
+	//{
+	//	SDL_WaitEvent(&event);
+//
+	//	switch (event.type)
+	//	{
+	//	case SDL_QUIT:
+	//		quit = true;
+	//		break;
+	//	}
+	//	SDL_RenderCopy(renderer, launcherBackground, nullptr, nullptr);
+	//	SDL_RenderPresent(renderer);
+	//}
+//
+	//SDL_DestroyTexture(launcherBackground);
+	//SDL_DestroyRenderer(renderer);
+	//SDL_DestroyWindow(window);
+	//SDL_Quit();
+
 	return EXIT_SUCCESS;
 }
