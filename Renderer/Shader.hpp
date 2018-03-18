@@ -18,7 +18,8 @@ namespace Renderer {
 
         void createGraphicShader(GLenum type, const std::string name)
         {
-            auto shader_script = std::move(this->loadFileContent(name).c_str());
+            std::string shader_file_content = this->loadFileContent(name);
+            auto shader_script = std::move(shader_file_content.c_str());
 
             GLuint shader = glCreateShader(type);
             glShaderSource(shader, 1, &shader_script, nullptr);
