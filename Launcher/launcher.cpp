@@ -1,12 +1,11 @@
 #include <iostream>
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-#include "..\vendor\include\SDL2\SDL.h"
-#include "..\vendor\include\SDL2\SDL_image.h"
-#else
 #include "../vendor/include/SDL2/SDL.h"
 #include "../vendor/include/SDL2/SDL_image.h"
-#endif
+#include "../Renderer/Window.hpp"
+#include "../Renderer/Shader.hpp"
+#include "../Renderer/Buffer.hpp"
+#include <functional>
 
 /* This binary should check for updates and update the data files, the client and itself for non-console platforms (If internet connection)
  * Update server should be just an SFTP or something, can have the key inside the source code.
@@ -36,53 +35,71 @@ SDL_Texture* LoadImage(SDL_Renderer* renderer, std::string file)
 	return texture;
 }
 
+const GLchar* vertexSource =
+        "attribute vec4 position;                  \n"
+        "void main()                               \n"
+        "{                                         \n"
+        "   gl_Position = vec4(position.xyz, 1.0); \n"
+        "}                                         \n";
+const GLchar* fragmentSource =
+        "precision mediump float;                     \n"
+        "void main()                                  \n"
+        "{                                            \n"
+        "  gl_FragColor = vec4 (1.0, 1.0, 1.0, 1.0 ); \n"
+        "}                                            \n";
+
+std::function<void()> loop;
+void main_loop() { loop(); }
+
 int main(int argc, char* args[]) {
-	SDL_Window* window = nullptr;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
 		return 1;
 	}
 
-	window = SDL_CreateWindow(
-		"Onyx Launcher",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		SCREEN_WIDTH, SCREEN_HEIGHT,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS
-	);
-	if (window == nullptr) {
-		fprintf(stderr, "could not create window: %s\n", SDL_GetError());
-		return 1;
-	}
+	auto windowObj = new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT);
+    SDL_Window* window = windowObj->getWindow();
 
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-	SDL_Texture* launcherBackground = LoadImage(renderer, "data/launcher.png");
-	if (launcherBackground == nullptr) {
-		fprintf(stderr, "%s", SDL_GetError());
-		//return 1;
-	}
+    // Create Vertex Array Object
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-	bool quit = false;
-	SDL_Event event = nullptr;
-	while (!quit)
-	{
-		SDL_WaitEvent(&event);
+    GLfloat vertices[] = {0.0f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f};
+    auto vbo = new Renderer::Buffer(GL_ARRAY_BUFFER);
+    vbo->bindBuffer();
+    vbo->copyDataToBuffer(vertices, sizeof(vertices));
 
-		switch (event.type)
-		{
-		case SDL_QUIT:
-			quit = true;
-			break;
-		}
-		SDL_RenderCopy(renderer, launcherBackground, nullptr, nullptr);
-		SDL_RenderPresent(renderer);
-	}
+    auto shader = new Renderer::Shader();
+    shader->createGraphicShader(GL_VERTEX_SHADER, vertexSource);
+    shader->createGraphicShader(GL_FRAGMENT_SHADER, fragmentSource);
+    shader->begin();
 
-	SDL_DestroyTexture(launcherBackground);
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
+    loop =  [&]
+    {
+        SDL_Event e;
+        while(SDL_PollEvent(&e))
+        {
+            if(e.type == SDL_QUIT) std::terminate();
+        }
 
+        // Clear the screen to black
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Draw a triangle from the 3 vertices
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        SDL_GL_SwapWindow(window);
+    };
+
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, true);
+#else
+    while(true) main_loop();
+#endif
+    
 	return EXIT_SUCCESS;
 }
