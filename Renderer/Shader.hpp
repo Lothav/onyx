@@ -4,6 +4,7 @@
 #include <GLES3/gl3.h>
 #include <fstream>
 #include <cassert>
+#include <vector>
 
 namespace Renderer {
 
@@ -11,10 +12,19 @@ namespace Renderer {
     {
     private:
         GLuint shaderProgram;
+        std::vector<GLuint> shaders;
 
     public:
 
         Shader() : shaderProgram(glCreateProgram()) {}
+
+        ~Shader()
+        {
+            glDeleteProgram(this->shaderProgram);
+            for (auto shader : shaders) {
+                glDeleteShader(shader);
+            }
+        }
 
         void createGraphicShader(GLenum type, const std::string name)
         {
@@ -25,6 +35,8 @@ namespace Renderer {
             glShaderSource(shader, 1, &shader_script, nullptr);
             this->compileShader(shader);
             glAttachShader(this->shaderProgram, shader);
+
+            shaders.push_back(shader);
         }
 
         GLuint getShaderProgram()

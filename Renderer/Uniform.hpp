@@ -16,6 +16,11 @@ namespace Renderer
     public:
         Uniform() {}
 
+        ~Uniform()
+        {
+            glDeleteTextures(1, &this->texture_id);
+        }
+
         void loadTexture(std::string path)
         {
             SDL_Surface* surf = IMG_Load(path.c_str());
@@ -34,12 +39,8 @@ namespace Renderer
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
-        void setUniform(GLuint shader_program, bool clear=false)
+        void setUniform(GLuint shader_program)
         {
-            if (clear) {
-                glBindTexture(GL_TEXTURE_2D, 0);
-                return;
-            }
             GLint uniformAtt = glGetUniformLocation(shader_program, "tex");
             glActiveTexture(GL_TEXTURE0 + 0);
             glBindTexture(GL_TEXTURE_2D, this->texture_id);

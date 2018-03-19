@@ -5,6 +5,7 @@
 #include "../Renderer/Vertex.hpp"
 #include "../Renderer/Uniform.hpp"
 #include <functional>
+#include <memory>
 
 /* This binary should check for updates and update the data files, the client and itself for non-console platforms (If internet connection)
  * Update server should be just an SFTP or something, can have the key inside the source code.
@@ -28,15 +29,15 @@ int main(int argc, char* args[]) {
 		return 1;
 	}
 
-	auto windowObj = new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT);
+	auto windowObj = std::make_unique<Renderer::Window>(SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_Window* window = windowObj->getWindow();
 
-    auto shader = new Renderer::Shader();
+    auto shader = std::make_unique<Renderer::Shader>();
     shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
     shader->createGraphicShader(GL_FRAGMENT_SHADER, "default.frag");
     shader->beginProgram();
 
-    auto texture = new Renderer::Uniform();
+    auto texture = std::make_unique<Renderer::Uniform>();
     texture->loadTexture("./data/launcher.png");
     texture->setUniform(shader->getShaderProgram());
 
@@ -54,7 +55,7 @@ int main(int argc, char* args[]) {
          0.4f,-0.4f, 0.0f,   1.0f, 1.0f,
     };
 
-    auto vertex = new Renderer::Vertex(sizeof(vertices), vertices, shader->getShaderProgram());
+    auto vertex = std::make_unique<Renderer::Vertex>(sizeof(vertices), vertices, shader->getShaderProgram());
 
     loop =  [&] () -> bool
     {

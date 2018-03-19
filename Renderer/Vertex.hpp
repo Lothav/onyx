@@ -31,6 +31,12 @@ namespace Renderer {
             this->defineLayout(shader_program, "vertTexCoord", 2, (const GLvoid*)(3 * sizeof(GLfloat)));
         }
 
+        ~Vertex()
+        {
+            glDeleteBuffers(1, &this->VBO);
+            glDeleteBuffers(1, &this->VAO);
+        }
+
     private:
 
         void defineLayout(GLuint sp, std::string att_name, const unsigned int size, const GLvoid* offset=nullptr)

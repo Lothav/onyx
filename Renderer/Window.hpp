@@ -41,6 +41,12 @@ namespace Renderer {
             this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
         }
 
+        ~Window()
+        {
+            SDL_DestroyRenderer(this->renderer);
+            SDL_DestroyWindow(this->window);
+        }
+
         SDL_Window* getWindow() {
             return this->window;
         }
