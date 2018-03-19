@@ -43,6 +43,9 @@ namespace Renderer {
         void defineLayout(GLuint sp, std::string att_name, const unsigned int size, const GLvoid* offset=nullptr)
         {
             GLint posAttrib = glGetAttribLocation(sp, att_name.c_str());
+            if(posAttrib == -1){
+                std::cerr << "Error find location Attribute shader!" << std::endl;
+            }
             auto uPosAttrib = static_cast<GLuint>(posAttrib);
             glEnableVertexAttribArray(uPosAttrib);
             glVertexAttribPointer(uPosAttrib, size, GL_FLOAT, GL_TRUE, VERTEX_LINE_SIZE*sizeof(GLfloat), offset);

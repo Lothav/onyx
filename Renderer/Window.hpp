@@ -1,7 +1,7 @@
 #ifndef ONYX_WINDOW_HPP
 #define ONYX_WINDOW_HPP
 
-#include "../vendor/include/SDL2/SDL.h"
+#include <SDL2/SDL.h>
 #include <iostream>
 
 namespace Renderer {
@@ -25,7 +25,7 @@ namespace Renderer {
                 "Onyx Launcher",
                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 screen_width, screen_height,
-                SDL_WINDOW_SHOWN
+                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
             );
             if (this->window == nullptr) {
                 fprintf(stderr, "Could not create window: %s\n", SDL_GetError());

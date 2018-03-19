@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "../vendor/include/SDL2/SDL.h"
 #include "../Renderer/Window.hpp"
 #include "../Renderer/Shader.hpp"
 #include "../Renderer/Vertex.hpp"
@@ -24,7 +23,7 @@ void main_loop() { loop(); }
 
 int main(int argc, char* args[]) {
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0 && IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG)) {
 		fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
 		return 1;
 	}
@@ -38,15 +37,19 @@ int main(int argc, char* args[]) {
     shader->begin();
 
     auto texture = new Renderer::Uniform();
-    texture->loadTexture("../bin/data/launcher.png");
+    texture->loadTexture("./bin/data/launcher.png");
     texture->setUniform(shader->getShaderProgram());
 
     GLfloat vertices[] = {
-         0.0f, 0.8f, 0.0f,  0.5f, 1.0f,
-        -0.8f,-0.8f, 0.0f,  0.0f, 0.0f,
-         0.8f,-0.8f, 0.0f,  1.0f, 0.0f,
+         0.0f, 0.8f, 0.0f,  0.5f, 0.0f,
+        -0.8f,-0.8f, 0.0f,  0.0f, 1.0f,
+         0.8f,-0.8f, 0.0f,  1.0f, 1.0f,
     };
+
     auto triangle = new Renderer::Vertex(sizeof(vertices), vertices, shader->getShaderProgram());
+    shader->useProgram();
+    texture->setUniform(shader->getShaderProgram());
+    triangle->bindVAO();
 
     loop =  [&]
     {
@@ -55,20 +58,11 @@ int main(int argc, char* args[]) {
         {
             if(e.type == SDL_QUIT) std::terminate();
         }
-
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shader->useProgram();
-        texture->setUniform(shader->getShaderProgram());
-        triangle->bindVAO();
-
         glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        triangle->bindVAO(true);
-        texture->setUniform(shader->getShaderProgram(), true);
-        shader->useProgram(false);
 
         SDL_GL_SwapWindow(window);
     };

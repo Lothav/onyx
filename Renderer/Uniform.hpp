@@ -2,9 +2,10 @@
 #define ONYX_UNIFORM_HPP
 
 #include <GLES3/gl3.h>
-#include "../vendor/include/SDL2/SDL_surface.h"
-#include "../vendor/include/SDL2/SDL_image.h"
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_image.h>
 #include <string>
+
 namespace Renderer
 {
     class Uniform
@@ -21,8 +22,10 @@ namespace Renderer
 
             glGenTextures(1, &this->texture_id);
             glBindTexture(GL_TEXTURE_2D, this->texture_id);
-            glTexImage2D(GL_TEXTURE_2D, 0, 3, surf->w, surf->h, 0, GL_RGB, GL_UNSIGNED_BYTE, surf->pixels);
-            glGetError();
+            glTexImage2D(GL_TEXTURE_2D, 0, 3, surf->w, surf->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
+            if (glGetError() != GL_FALSE) {
+                std::cerr << "OpenGL error glTexImage2D" << std::endl;
+            }
 
             /* Linear Filtering */
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

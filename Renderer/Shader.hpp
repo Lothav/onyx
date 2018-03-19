@@ -23,8 +23,7 @@ namespace Renderer {
 
             GLuint shader = glCreateShader(type);
             glShaderSource(shader, 1, &shader_script, nullptr);
-            glCompileShader(shader);
-
+            this->compileShader(shader);
             glAttachShader(this->shaderProgram, shader);
         }
 
@@ -34,27 +33,44 @@ namespace Renderer {
 
         void begin()
         {
+            glUseProgram(this->shaderProgram);
             glLinkProgram(this->shaderProgram);
         }
 
         void useProgram(bool clear=false) {
-            if (clear && this->isProgramInUse()) {
+            if (clear) {
                 glUseProgram(0);
             } else {
                 glUseProgram(this->shaderProgram);
             }
         }
 
-        bool isProgramInUse() const {
-            GLint currentProgram = 0;
-            glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
-            return (currentProgram == (GLint)shaderProgram);
-        }
-
     private:
 
+        void compileShader(GLuint shader) {
+            // Try compile Shader
+            glCompileShader(shader);
+
+            // Check if success compiled
+            GLint status;
+            glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+            if (status == GL_FALSE) {
+                std::string msg("Compile failure in shader:\n");
+
+                GLint infoLogLength;
+                glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+                char* strInfoLog = new char[infoLogLength + 1];
+                glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
+                msg += strInfoLog;
+                delete[] strInfoLog;
+
+                glDeleteShader(shader);
+                std::cerr << msg << std::endl;
+            }
+        }
+
         std::string loadFileContent(std::string name){
-            std::string filePath = "../Renderer/shaders/" + name;
+            std::string filePath = "./Renderer/shaders/" + name;
 
             std::string content;
             std::ifstream fileStream(filePath, std::ios::in);
