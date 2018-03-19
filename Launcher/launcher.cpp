@@ -37,7 +37,7 @@ int main(int argc, char* args[]) {
     shader->beginProgram();
 
     auto texture = new Renderer::Uniform();
-    texture->loadTexture("./bin/data/launcher.png");
+    texture->loadTexture("./data/launcher.png");
     texture->setUniform(shader->getShaderProgram());
 
     GLfloat vertices[] = {

@@ -52,8 +52,8 @@ namespace Renderer {
 
                 GLint infoLogLength;
                 glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-                char* strInfoLog = new char[infoLogLength + 1];
-                glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
+                auto strInfoLog = new char[infoLogLength + 1];
+                glGetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog);
                 msg += strInfoLog;
                 delete[] strInfoLog;
 
@@ -63,7 +63,7 @@ namespace Renderer {
         }
 
         std::string loadFileContent(std::string name){
-            std::string filePath = "./Renderer/shaders/" + name;
+            std::string filePath = "./data/shaders/" + name;
 
             std::string content;
             std::ifstream fileStream(filePath, std::ios::in);
