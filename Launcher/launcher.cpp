@@ -18,8 +18,8 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
-std::function<void()> loop;
-void main_loop() { loop(); }
+std::function<bool()> loop;
+bool main_loop() { return loop(); }
 
 int main(int argc, char* args[]) {
 
@@ -51,12 +51,12 @@ int main(int argc, char* args[]) {
     texture->setUniform(shader->getShaderProgram());
     triangle->bindVAO();
 
-    loop =  [&]
+    loop =  [&] () -> bool
     {
         SDL_Event e;
         while(SDL_PollEvent(&e))
         {
-            if(e.type == SDL_QUIT) std::terminate();
+            if(e.type == SDL_QUIT) return false;
         }
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -65,12 +65,14 @@ int main(int argc, char* args[]) {
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         SDL_GL_SwapWindow(window);
+
+        return true;
     };
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, true);
 #else
-    while(true) main_loop();
+    while(main_loop());
 #endif
 	return EXIT_SUCCESS;
 }

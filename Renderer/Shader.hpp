@@ -27,17 +27,18 @@ namespace Renderer {
             glAttachShader(this->shaderProgram, shader);
         }
 
-        GLuint getShaderProgram() {
+        GLuint getShaderProgram()
+        {
             return this->shaderProgram;
         }
 
         void begin()
         {
-            glUseProgram(this->shaderProgram);
             glLinkProgram(this->shaderProgram);
         }
 
-        void useProgram(bool clear=false) {
+        void useProgram(bool clear=false)
+        {
             if (clear) {
                 glUseProgram(0);
             } else {

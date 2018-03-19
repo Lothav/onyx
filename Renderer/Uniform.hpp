@@ -22,9 +22,11 @@ namespace Renderer
 
             glGenTextures(1, &this->texture_id);
             glBindTexture(GL_TEXTURE_2D, this->texture_id);
-            glTexImage2D(GL_TEXTURE_2D, 0, 3, surf->w, surf->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
-            if (glGetError() != GL_FALSE) {
-                std::cerr << "OpenGL error glTexImage2D" << std::endl;
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surf->w, surf->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
+
+            unsigned int error_code = glGetError();
+            if (error_code != GL_NO_ERROR) {
+                std::cerr << "OpenGL error glTexImage2D. Error code: " << std::to_string(error_code) << std::endl;
             }
 
             /* Linear Filtering */
