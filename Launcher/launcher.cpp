@@ -5,6 +5,7 @@
 #include "../Renderer/Vertex.hpp"
 #include "../Renderer/Uniform.hpp"
 #include "../Renderer/Player.h"
+#include "../Renderer/Meshes.h"
 #include <functional>
 #include <memory>
 
@@ -42,22 +43,11 @@ int main(int argc, char* args[]) {
     texture->loadTexture("./data/launcher.png");
     texture->setUniform(shader->getShaderProgram());
 
-    GLfloat vertices[] = {
-         -0.5f, 0.4f, 0.0f,  0.5f, 0.0f,
-         -0.9f,-0.4f, 0.0f,  0.0f, 1.0f,
-         -0.1f,-0.4f, 0.0f,  1.0f, 1.0f,
-
-         0.5f, 0.4f, 0.0f,   0.5f, 0.0f,
-         0.1f,-0.4f, 0.0f,   0.0f, 1.0f,
-         0.9f,-0.4f, 0.0f,   1.0f, 1.0f,
-
-         0.0f, 0.4f, 0.0f,   0.5f, 0.0f,
-         -0.4f,-0.4f, 0.0f,  0.0f, 1.0f,
-         0.4f,-0.4f, 0.0f,   1.0f, 1.0f,
-    };
-
     auto vertex = std::make_unique<Renderer::Vertex>(shader->getShaderProgram());
-    auto player = std::make_unique<Renderer::Player>(0.0f, 0.0f, 1.0f, 0.5f);
+    auto meshes = std::make_unique<Renderer::Meshes>();
+
+    auto player1 = std::make_unique<Renderer::Player>(0.5f, 0.0f, 1.0f, 0.5f);
+    auto player2 = std::make_unique<Renderer::Player>(-0.5f, 0.0f, 1.0f, 0.5f);
 
     loop =  [&] () -> bool
     {
@@ -67,12 +57,16 @@ int main(int argc, char* args[]) {
             if(e.type == SDL_QUIT) return false;
             if(e.type == SDL_KEYDOWN) return false;
         }
-        vertex->setBufferData(player->getVerticesSize(), player->getVertices());
+        meshes->clear();
+        meshes->insert(player1->getVertices(), player1->getVerticesSize());
+        meshes->insert(player2->getVertices(), player2->getVerticesSize());
+
+        vertex->setBufferData(meshes->getSize(), meshes->get());
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices));
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(meshes->getSize()));
 
         SDL_GL_SwapWindow(window);
 

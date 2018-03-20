@@ -7,6 +7,7 @@
 
 #include <GLES3/gl3.h>
 #include <algorithm>
+#include <array>
 
 #define SIZE_VERTICES 30 // 6 points, 5 coords each (x, y, z, u, v)
 
@@ -21,25 +22,29 @@ namespace Renderer
         float height;
         float width;
 
-        GLfloat vertices[SIZE_VERTICES];
+        std::array<GLfloat,SIZE_VERTICES>vertices;
 
     public:
-        Player(float x, float y, float height, float width) : x(x), y(y), height(height), width(width),
-        vertices({
-             // Triangles                                                c ___
-             x + (width/2), y + (height/2), 0.0f, 1.0f, 0.0f, // a        |  /a
-             x - (width/2), y - (height/2), 0.0f, 0.0f, 1.0f, // b        | /
-             x - (width/2), y + (height/2), 0.0f, 0.0f, 0.0f, // c       b|/
 
-             x + (width/2), y + (height/2), 0.0f, 1.0f, 0.0f, // d          /|d
-             x - (width/2), y - (height/2), 0.0f, 0.0f, 1.0f, // e         / |
-             x + (width/2), y - (height/2), 0.0f, 1.0f, 1.0f, // f       e/__|f
-        }) {}
+        Player(float x, float y, float height, float width) : x(x), y(y), height(height), width(width)
+        {
+            vertices = {
+                    // Triangles                                                c ___
+                    x + (width/2), y + (height/2), 0.0f, 1.0f, 0.0f, // a        |  /a
+                    x - (width/2), y - (height/2), 0.0f, 0.0f, 1.0f, // b        | /
+                    x - (width/2), y + (height/2), 0.0f, 0.0f, 0.0f, // c       b|/
+
+                    x + (width/2), y + (height/2), 0.0f, 1.0f, 0.0f, // d          /|d
+                    x - (width/2), y - (height/2), 0.0f, 0.0f, 1.0f, // e         / |
+                    x + (width/2), y - (height/2), 0.0f, 1.0f, 1.0f, // f       e/__|f
+            };
+        }
 
         GLfloat* getVertices()
         {
-            return this->vertices;
+            return this->vertices.data();
         }
+
         unsigned int getVerticesSize()
         {
             return sizeof(GLfloat) * SIZE_VERTICES;

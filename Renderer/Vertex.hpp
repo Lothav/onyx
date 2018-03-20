@@ -14,9 +14,12 @@ namespace Renderer {
         GLuint VBO;
         GLuint VAO;
 
+        GLfloat* vertices;
+        unsigned int vertices_size;
+
     public:
 
-        Vertex(GLuint shader_program) : VBO(0), VAO(0)
+        Vertex(GLuint shader_program) : VBO(0), VAO(0), vertices(nullptr), vertices_size(0)
         {
             glGenVertexArrays(1, &this->VAO);
             glBindVertexArray(this->VAO);
@@ -35,7 +38,7 @@ namespace Renderer {
             glDeleteBuffers(1, &this->VAO);
         }
 
-        void setBufferData (unsigned int size, GLfloat* data)
+        void setBufferData (unsigned long size, GLfloat* data)
         {
             glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
         }
