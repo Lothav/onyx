@@ -4,6 +4,7 @@
 #include "../Renderer/Shader.hpp"
 #include "../Renderer/Vertex.hpp"
 #include "../Renderer/Uniform.hpp"
+#include "../Renderer/Player.h"
 #include <functional>
 #include <memory>
 
@@ -16,8 +17,8 @@
  *	            (Linux  ): https://google.com
  */
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 800
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
 
 std::function<bool()> loop;
 bool main_loop() { return loop(); }
@@ -55,7 +56,8 @@ int main(int argc, char* args[]) {
          0.4f,-0.4f, 0.0f,   1.0f, 1.0f,
     };
 
-    auto vertex = std::make_unique<Renderer::Vertex>(sizeof(vertices), vertices, shader->getShaderProgram());
+    auto vertex = std::make_unique<Renderer::Vertex>(shader->getShaderProgram());
+    auto player = std::make_unique<Renderer::Player>(0.0f, 0.0f, 1.0f, 0.5f);
 
     loop =  [&] () -> bool
     {
@@ -63,7 +65,9 @@ int main(int argc, char* args[]) {
         while(SDL_PollEvent(&e))
         {
             if(e.type == SDL_QUIT) return false;
+            if(e.type == SDL_KEYDOWN) return false;
         }
+        vertex->setBufferData(player->getVerticesSize(), player->getVertices());
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

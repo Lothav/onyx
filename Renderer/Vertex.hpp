@@ -16,7 +16,7 @@ namespace Renderer {
 
     public:
 
-        Vertex(unsigned int size, GLfloat* data, GLuint shader_program) : VBO(0), VAO(0)
+        Vertex(GLuint shader_program) : VBO(0), VAO(0)
         {
             glGenVertexArrays(1, &this->VAO);
             glBindVertexArray(this->VAO);
@@ -24,8 +24,6 @@ namespace Renderer {
             // make and bind the VBO
             glGenBuffers(1, &this->VBO);
             glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-
-            glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 
             this->defineLayout(shader_program, "vert", 3);
             this->defineLayout(shader_program, "vertTexCoord", 2, (const GLvoid*)(3 * sizeof(GLfloat)));
@@ -35,6 +33,11 @@ namespace Renderer {
         {
             glDeleteBuffers(1, &this->VBO);
             glDeleteBuffers(1, &this->VAO);
+        }
+
+        void setBufferData (unsigned int size, GLfloat* data)
+        {
+            glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
         }
 
     private:
