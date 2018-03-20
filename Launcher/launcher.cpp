@@ -15,8 +15,8 @@
  *	            (Linux  ): https://google.com
  */
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 800
 
 std::function<bool()> loop;
 bool main_loop() { return loop(); }
@@ -24,7 +24,7 @@ bool main_loop() { return loop(); }
 int main(int argc, char* args[]) {
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0 && IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG)) {
-		fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
+		std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
 		return 1;
 	}
 
@@ -34,22 +34,27 @@ int main(int argc, char* args[]) {
     auto shader = new Renderer::Shader();
     shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
     shader->createGraphicShader(GL_FRAGMENT_SHADER, "default.frag");
-    shader->begin();
+    shader->beginProgram();
 
     auto texture = new Renderer::Uniform();
     texture->loadTexture("./bin/data/launcher.png");
     texture->setUniform(shader->getShaderProgram());
 
     GLfloat vertices[] = {
-         0.0f, 0.8f, 0.0f,  0.5f, 0.0f,
-        -0.8f,-0.8f, 0.0f,  0.0f, 1.0f,
-         0.8f,-0.8f, 0.0f,  1.0f, 1.0f,
+         -0.5f, 0.4f, 0.0f,  0.5f, 0.0f,
+         -0.9f,-0.4f, 0.0f,  0.0f, 1.0f,
+         -0.1f,-0.4f, 0.0f,  1.0f, 1.0f,
+
+         0.5f, 0.4f, 0.0f,   0.5f, 0.0f,
+         0.1f,-0.4f, 0.0f,   0.0f, 1.0f,
+         0.9f,-0.4f, 0.0f,   1.0f, 1.0f,
+
+         0.0f, 0.4f, 0.0f,   0.5f, 0.0f,
+         -0.4f,-0.4f, 0.0f,  0.0f, 1.0f,
+         0.4f,-0.4f, 0.0f,   1.0f, 1.0f,
     };
 
-    auto triangle = new Renderer::Vertex(sizeof(vertices), vertices, shader->getShaderProgram());
-    shader->useProgram();
-    texture->setUniform(shader->getShaderProgram());
-    triangle->bindVAO();
+    auto vertex = new Renderer::Vertex(sizeof(vertices), vertices, shader->getShaderProgram());
 
     loop =  [&] () -> bool
     {
@@ -62,7 +67,7 @@ int main(int argc, char* args[]) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices));
 
         SDL_GL_SwapWindow(window);
 

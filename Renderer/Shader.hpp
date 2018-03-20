@@ -32,18 +32,10 @@ namespace Renderer {
             return this->shaderProgram;
         }
 
-        void begin()
+        void beginProgram()
         {
             glLinkProgram(this->shaderProgram);
-        }
-
-        void useProgram(bool clear=false)
-        {
-            if (clear) {
-                glUseProgram(0);
-            } else {
-                glUseProgram(this->shaderProgram);
-            }
+            glUseProgram(this->shaderProgram);
         }
 
     private:

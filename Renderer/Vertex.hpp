@@ -19,7 +19,7 @@ namespace Renderer {
         Vertex(unsigned int size, GLfloat* data, GLuint shader_program) : VBO(0), VAO(0)
         {
             glGenVertexArrays(1, &this->VAO);
-            this->bindVAO();
+            glBindVertexArray(this->VAO);
 
             // make and bind the VBO
             glGenBuffers(1, &this->VBO);
@@ -29,13 +29,6 @@ namespace Renderer {
 
             this->defineLayout(shader_program, "vert", 3);
             this->defineLayout(shader_program, "vertTexCoord", 2, (const GLvoid*)(3 * sizeof(GLfloat)));
-
-            // unbind the VAO
-            this->bindVAO(true);
-        }
-
-        void bindVAO(bool clear=false) {
-            glBindVertexArray(clear ? 0 : this->VAO);
         }
 
     private:
