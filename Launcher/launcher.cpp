@@ -43,11 +43,11 @@ int main(int argc, char* args[]) {
     texture->loadTexture("./data/launcher.png");
     texture->setUniform(shader->getShaderProgram());
 
-    auto vertex = std::make_unique<Renderer::Vertex>(shader->getShaderProgram());
-    auto meshes = std::make_unique<Renderer::Meshes>();
+    auto vertex = std::unique_ptr<Renderer::Vertex>( new Renderer::Vertex(shader->getShaderProgram()) );
+    auto meshes = std::unique_ptr<Renderer::Meshes>( new Renderer::Meshes() );
 
-    auto player1 = std::make_unique<Renderer::Player>(0.5f, 0.0f, 1.0f, 0.5f);
-    auto player2 = std::make_unique<Renderer::Player>(-0.5f, 0.0f, 1.0f, 0.5f);
+    auto player1 = std::unique_ptr<Renderer::Player>(new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f) );
+    auto player2 = std::unique_ptr<Renderer::Player>(new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f) );
 
     loop =  [&] () -> bool
     {
