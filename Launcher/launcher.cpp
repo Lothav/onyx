@@ -26,15 +26,20 @@ bool main_loop() { return loop(); }
 
 int main(int argc, char* args[]) {
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0 && IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG)) {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
-		return 1;
+		return EXIT_FAILURE;
 	}
 
-	auto windowObj = std::make_unique<Renderer::Window>(SCREEN_WIDTH, SCREEN_HEIGHT);
+    if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG)) {
+        std::cerr << "Could not initialize IMG's flags" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+	auto windowObj = std::unique_ptr<Renderer::Window>( new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT) );
     SDL_Window* window = windowObj->getWindow();
 
-    auto shader = std::make_unique<Renderer::Shader>();
+    auto shader = std::unique_ptr<Renderer::Shader>( new Renderer::Shader() );
     shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
     shader->createGraphicShader(GL_FRAGMENT_SHADER, "default.frag");
     shader->beginProgram();
