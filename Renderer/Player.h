@@ -9,7 +9,10 @@
 #include <algorithm>
 #include <array>
 
-#define SIZE_VERTICES 30 // 6 points, 5 coords each (x, y, z, u, v)
+#define COORDINATES_BY_VERTEX 5   // 5 coords each (x, y, z, u, v)
+#define PLAYER_VERTICES 6         // 6 points (two triangles
+
+#define SIZE_VERTICES PLAYER_VERTICES*COORDINATES_BY_VERTEX
 
 namespace Renderer
 {
@@ -48,6 +51,15 @@ namespace Renderer
         unsigned int getVerticesSize()
         {
             return sizeof(GLfloat) * SIZE_VERTICES;
+        }
+
+        void move(float x, float y)
+        {
+            for (int i = 0; i < SIZE_VERTICES; i += COORDINATES_BY_VERTEX)
+            {
+                this->vertices[i]   += x;
+                this->vertices[i+1] += y;
+            }
         }
 
     };
