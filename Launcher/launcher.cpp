@@ -26,17 +26,17 @@ bool main_loop() { return loop(); }
 
 int main(int argc, char* args[]) {
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
-		return EXIT_FAILURE;
-	}
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
+        return EXIT_FAILURE;
+    }
 
-    if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG)) {
+    if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == 0) {
         std::cerr << "Could not initialize IMG's flags" << std::endl;
         return EXIT_FAILURE;
     }
 
-	auto windowObj = std::unique_ptr<Renderer::Window>( new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT) );
+    auto windowObj = std::unique_ptr<Renderer::Window>( new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT) );
     SDL_Window* window = windowObj->getWindow();
 
     auto shader = std::unique_ptr<Renderer::Shader>( new Renderer::Shader() );
@@ -60,7 +60,26 @@ int main(int argc, char* args[]) {
         while(SDL_PollEvent(&e))
         {
             if(e.type == SDL_QUIT) return false;
-            if(e.type == SDL_KEYDOWN) return false;
+            if(e.type == SDL_KEYDOWN)
+            {
+                switch( e.key.keysym.sym )
+                {
+                    case SDLK_UP:
+                        std::cout << "Key Up pressed" << std::endl;
+                        break;
+                    case SDLK_DOWN:
+                        std::cout << "Key Down pressed" << std::endl;
+                        break;
+                    case SDLK_LEFT:
+                        std::cout << "Key Left pressed" << std::endl;
+                        break;
+                    case SDLK_RIGHT:
+                        std::cout << "Key Right pressed" << std::endl;
+                        break;
+                    default:
+                        std::cout << "Non-arrow Key pressed" << std::endl;
+                }
+            }
         }
         meshes->clear();
         meshes->insert(player1->getVertices(), player1->getVerticesSize());
@@ -83,5 +102,5 @@ int main(int argc, char* args[]) {
 #else
     while(main_loop());
 #endif
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
