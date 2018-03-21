@@ -1,2 +1,2 @@
 all:
-	g++ -std=c++11 launcher.cpp -o ../bin/launcher
+	g++ -std=c++14 launcher.cpp -o ../bin/launcher -lSDL2 -lSDL2_image -lGLESv2

@@ -1,5 +1,6 @@
-#version 130
+#version 320 es
 
+precision mediump float;
 uniform sampler2D tex;
 in vec2 fragTexCoord;
 out vec4 finalColor;
