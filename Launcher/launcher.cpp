@@ -86,15 +86,15 @@ int main(int argc, char* args[]) {
             }
         }
         meshes->clear();
-        meshes->insert(player1->getVertices(), player1->getVerticesSize());
-        meshes->insert(player2->getVertices(), player2->getVerticesSize());
+        meshes->insert(player1->getVertices(), player1->getTotalVertices());
+        meshes->insert(player2->getVertices(), player2->getTotalVertices());
 
-        vertex->setBufferData(meshes->getSize(), meshes->get());
+        vertex->setBufferData(meshes->getByteSize(), meshes->get());
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(meshes->getSize()));
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(meshes->getSize()) );
 
         SDL_GL_SwapWindow(window);
 

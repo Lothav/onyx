@@ -35,9 +35,15 @@ namespace Renderer
             return this->meshes.data();
         }
 
-        unsigned long getSize()
+        unsigned long getByteSize()
         {
             return this->meshes.size() * sizeof(GLfloat);
+        }
+
+        unsigned long getSize()
+        {
+            std::cout << "Meshes size: " << this->meshes.size() << std::endl;
+            return this->meshes.size();
         }
     };
 

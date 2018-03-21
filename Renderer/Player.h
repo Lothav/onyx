@@ -48,9 +48,9 @@ namespace Renderer
             return this->vertices.data();
         }
 
-        unsigned int getVerticesSize()
+        unsigned int getTotalVertices()
         {
-            return sizeof(GLfloat) * SIZE_VERTICES;
+            return SIZE_VERTICES;
         }
 
         void move(float x, float y)
