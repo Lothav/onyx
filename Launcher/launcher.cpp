@@ -46,13 +46,14 @@ int main(int argc, char* args[]) {
 
     auto texture = std::make_unique<Renderer::Uniform>();
     texture->loadTexture("./data/launcher.png");
-    texture->setUniform(shader->getShaderProgram());
+    texture->setUniform(shader->getShaderProgram(), UNIFORM_TYPE_TEXTURE);
+    texture->setUniform(shader->getShaderProgram(), UNIFORM_TYPE_MAT4);
 
     auto vertex = std::unique_ptr<Renderer::Vertex>( new Renderer::Vertex(shader->getShaderProgram()) );
     auto meshes = std::unique_ptr<Renderer::Meshes>( new Renderer::Meshes() );
 
-    auto player1 = std::unique_ptr<Renderer::Player>(new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f) );
-    auto player2 = std::unique_ptr<Renderer::Player>(new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f) );
+    auto player1 = std::unique_ptr<Renderer::Player>( new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f) );
+    auto player2 = std::unique_ptr<Renderer::Player>( new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f) );
 
     loop =  [&] () -> bool
     {
@@ -80,6 +81,20 @@ int main(int argc, char* args[]) {
                         player1->move(.10f, 0.0f);
                         std::cout << "Key Right pressed" << std::endl;
                         break;
+
+                    case SDLK_w:
+                        texture->translateCamera(shader->getShaderProgram(), glm::vec3(0.0f, 0.1f, 0.0f));
+                        break;
+                    case SDLK_a:
+                        texture->translateCamera(shader->getShaderProgram(), glm::vec3(-0.1f, 0.0f, 0.0f));
+                        break;
+                    case SDLK_s:
+                        texture->translateCamera(shader->getShaderProgram(), glm::vec3(0.0f, -0.1f, 0.0f));
+                        break;
+                    case SDLK_d:
+                        texture->translateCamera(shader->getShaderProgram(), glm::vec3(0.1f, 0.0f, 0.0f));
+                        break;
+
                     default:
                         std::cout << "Non-arrow Key pressed" << std::endl;
                 }

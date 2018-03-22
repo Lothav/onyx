@@ -42,7 +42,6 @@ namespace Renderer
 
         unsigned long getSize()
         {
-            std::cout << "Meshes size: " << this->meshes.size() << std::endl;
             return this->meshes.size();
         }
     };

@@ -36,7 +36,7 @@ namespace Renderer {
             this->compileShader(shader);
             glAttachShader(this->shaderProgram, shader);
 
-            shaders.push_back(shader);
+            this->shaders.push_back(shader);
         }
 
         GLuint getShaderProgram()
