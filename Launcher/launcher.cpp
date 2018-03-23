@@ -1,11 +1,13 @@
-#include <iostream>
+#include "../Renderer/MemoryPool.hpp"
+
+Renderer::MemoryPool MemoryPool;
 
 #include "../Renderer/Window.hpp"
 #include "../Renderer/Shader.hpp"
 #include "../Renderer/Vertex.hpp"
 #include "../Renderer/Uniform.hpp"
-#include "../Renderer/Player.h"
-#include "../Renderer/Meshes.h"
+#include "../Renderer/Player.hpp"
+#include "../Renderer/Meshes.hpp"
 #include <functional>
 #include <memory>
 
@@ -25,6 +27,8 @@ std::function<bool()> loop;
 bool main_loop() { return loop(); }
 
 int main(int argc, char* args[]) {
+
+    MemoryPool.createPool();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
