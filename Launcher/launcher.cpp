@@ -28,7 +28,7 @@ bool main_loop() { return loop(); }
 
 int main(int argc, char* args[]) {
 
-    MemoryPool.createPool();
+    MemoryPool.create();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
