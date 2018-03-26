@@ -66,19 +66,19 @@ int main(int argc, char* args[]) {
                 switch( e.key.keysym.sym )
                 {
                     case SDLK_UP:
-                        player1->move(0.0f, .10f);
+                        player1->move(.0f, .10f);
                         std::cout << "Key Up pressed" << std::endl;
                         break;
                     case SDLK_DOWN:
-                        player1->move(0.0f, -.10f);
+                        player1->move(.0f, -.10f);
                         std::cout << "Key Down pressed" << std::endl;
                         break;
                     case SDLK_LEFT:
-                        player1->move(-.10f, 0.0f);
+                        player1->move(-.10f, .0f);
                         std::cout << "Key Left pressed" << std::endl;
                         break;
                     case SDLK_RIGHT:
-                        player1->move(.10f, 0.0f);
+                        player1->move(.10f, .0f);
                         std::cout << "Key Right pressed" << std::endl;
                         break;
 
