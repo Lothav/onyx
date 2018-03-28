@@ -1,6 +1,4 @@
-#include "../Renderer/MemoryPool.hpp"
-
-Renderer::MemoryPool MemoryPool;
+#include "../Memory/Pool.hpp"
 
 #include "../Renderer/Window.hpp"
 #include "../Renderer/Shader.hpp"
@@ -8,6 +6,8 @@ Renderer::MemoryPool MemoryPool;
 #include "../Renderer/Uniform.hpp"
 #include "../Renderer/Player.hpp"
 #include "../Renderer/Meshes.hpp"
+#include "../Memory/Allocator.hpp"
+#include "../Memory/Provider.hpp"
 #include <functional>
 #include <memory>
 
@@ -28,7 +28,26 @@ bool main_loop() { return loop(); }
 
 int main(int argc, char* args[]) {
 
-    MemoryPool.create();
+    Memory::Provider::initPool();
+
+    std::vector<int, Memory::Allocator<int>> vec;
+    vec.push_back(3);
+    vec.push_back(4);
+    vec.push_back(4);
+    vec.push_back(4);
+    vec.push_back(4);
+    vec.push_back(4);
+
+    Memory::Provider::destroyPool();
+
+    return 0;
+
+
+
+
+
+
+
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
