@@ -7,7 +7,6 @@
 #include "../Renderer/Player.hpp"
 #include "../Renderer/Meshes.hpp"
 #include "../Memory/Allocator.hpp"
-#include "../Memory/Provider.hpp"
 #include <functional>
 #include <memory>
 
@@ -38,17 +37,6 @@ int main(int argc, char* args[]) {
     vec.push_back(4);
     vec.push_back(4);
 
-    Memory::Provider::destroyPool();
-
-    return 0;
-
-
-
-
-
-
-
-
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
         return EXIT_FAILURE;
@@ -61,6 +49,11 @@ int main(int argc, char* args[]) {
 
     auto windowObj = std::unique_ptr<Renderer::Window>( new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT) );
     SDL_Window* window = windowObj->getWindow();
+
+
+    Memory::Provider::destroyPool();
+
+    return 0;
 
     auto shader = std::unique_ptr<Renderer::Shader>( new Renderer::Shader() );
     shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");

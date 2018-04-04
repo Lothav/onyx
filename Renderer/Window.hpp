@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <iostream>
+#include "../Memory/Provider.hpp"
 
 namespace Renderer {
 
@@ -15,6 +16,13 @@ namespace Renderer {
         SDL_Renderer*   renderer;
 
     public:
+
+        void* operator new (std::size_t size)
+        {
+            return Memory::Provider::getMemory(Memory::PoolType::POOL_TYPE_GENERIC, size);
+        }
+
+        void  operator delete (void* ptr, std::size_t) {}
 
         Window(const int screen_width, const int screen_height) : window(nullptr), renderer(nullptr) {
             if (SDL_Init(SDL_INIT_VIDEO) < 0) {
