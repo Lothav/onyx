@@ -27,7 +27,7 @@ namespace Memory
     public:
 
         Pool(PoolType type, std::size_t size);
-        void* get(unsigned int);
+        void* get(std::size_t);
         void destroy();
 
     };

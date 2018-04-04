@@ -1,6 +1,6 @@
 #include "Pool.hpp"
 
-void* Memory::Pool::get(unsigned int size)
+void* Memory::Pool::get(std::size_t size)
 {
     if (mem_pool_ == nullptr) {
         std::cerr << "Memory pool not allocated" << std::endl;

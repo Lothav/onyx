@@ -15,7 +15,7 @@ namespace Memory
     public:
         static std::map<PoolType, Pool*> PoolMap;
         static void initPool();
-        static void* getMemory(Memory::PoolType type, unsigned int size);
+        static void* getMemory(Memory::PoolType type, std::size_t size);
         static void destroyPool();
     };
 }

@@ -11,7 +11,7 @@ void Memory::Provider::initPool()
     PoolMap[PoolType::POOL_TYPE_GENERIC] = new Memory::Pool(PoolType::POOL_TYPE_GENERIC, 500000);
 }
 
-void* Memory::Provider::getMemory(Memory::PoolType type, unsigned int size)
+void* Memory::Provider::getMemory(Memory::PoolType type, std::size_t size)
 {
     return PoolMap[type]->get(size);
 }
