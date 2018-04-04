@@ -50,15 +50,15 @@ int main(int argc, char* args[]) {
     auto windowObj = std::unique_ptr<Renderer::Window>( new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT) );
     SDL_Window* window = windowObj->getWindow();
 
+    auto shader = std::unique_ptr<Renderer::Shader>( new Renderer::Shader() );
+    shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
+    shader->createGraphicShader(GL_FRAGMENT_SHADER, "default.frag");
+    shader->beginProgram();
 
     Memory::Provider::destroyPool();
 
     return 0;
 
-    auto shader = std::unique_ptr<Renderer::Shader>( new Renderer::Shader() );
-    shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
-    shader->createGraphicShader(GL_FRAGMENT_SHADER, "default.frag");
-    shader->beginProgram();
 
     auto texture = std::make_unique<Renderer::Uniform>();
     texture->loadTexture("./data/launcher.png");

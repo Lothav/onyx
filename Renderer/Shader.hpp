@@ -5,11 +5,14 @@
 #include <fstream>
 #include <cassert>
 #include <vector>
+#include "../Memory/Pool.hpp"
+#include "../Memory/Provider.hpp"
 
 namespace Renderer {
 
     class Shader
     {
+
     private:
         GLuint shaderProgram;
         std::vector<GLuint> shaders;
@@ -26,72 +29,21 @@ namespace Renderer {
             }
         }
 
-        void createGraphicShader(GLenum type, const std::string name)
+        void* operator new (std::size_t size)
         {
-            std::string shader_file_content = this->loadFileContent(name);
-            auto shader_script = std::move(shader_file_content.c_str());
-
-            GLuint shader = glCreateShader(type);
-            glShaderSource(shader, 1, &shader_script, nullptr);
-            this->compileShader(shader);
-            glAttachShader(this->shaderProgram, shader);
-
-            this->shaders.push_back(shader);
+            return Memory::Provider::getMemory(Memory::PoolType::POOL_TYPE_GENERIC, size);
         }
 
-        GLuint getShaderProgram()
-        {
-            return this->shaderProgram;
-        }
+        void  operator delete (void* ptr, std::size_t) {}
 
-        void beginProgram()
-        {
-            glLinkProgram(this->shaderProgram);
-            glUseProgram(this->shaderProgram);
-        }
+        void createGraphicShader(GLenum, std::string);
+        GLuint getShaderProgram();
+        void beginProgram();
 
     private:
 
-        void compileShader(GLuint shader) {
-            // Try compile Shader
-            glCompileShader(shader);
-
-            // Check if success compiled
-            GLint status;
-            glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-            if (status == GL_FALSE) {
-                std::string msg("Compile failure in shader:\n");
-
-                GLint infoLogLength;
-                glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-                auto strInfoLog = new char[infoLogLength + 1];
-                glGetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog);
-                msg += strInfoLog;
-                delete[] strInfoLog;
-
-                glDeleteShader(shader);
-                std::cerr << msg << std::endl;
-            }
-        }
-
-        std::string loadFileContent(std::string name){
-            std::string filePath = "./data/shaders/" + name;
-
-            std::string content;
-            std::ifstream fileStream(filePath, std::ios::in);
-            if(!fileStream.is_open()) {
-                std::cerr << "Could not read file " << filePath << ". File does not exist." << std::endl;
-                return "";
-            }
-            std::string line = "";
-            while(!fileStream.eof()) {
-                std::getline(fileStream, line);
-                content.append(line + "\n");
-            }
-            fileStream.close();
-
-            return content;
-        }
+        void compileShader(GLuint);
+        std::string loadShaderFileContent(std::string);
 
     };
 
