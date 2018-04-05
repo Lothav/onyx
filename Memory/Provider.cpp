@@ -1,5 +1,8 @@
 #include "Provider.hpp"
 
+/* Init static member with a empty map */
+std::map <const Memory::PoolType, Memory::Pool*> Memory::Provider::_poolMap = {};
+
 void Memory::Provider::initPools()
 {
     for (auto& poolInfo: PoolsInfo) {

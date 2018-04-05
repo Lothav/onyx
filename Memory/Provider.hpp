@@ -1,13 +1,8 @@
-//
-// Created by luiz0tavio on 3/28/18.
-//
-
 #ifndef ONYX_PROVIDER_HPP
 #define ONYX_PROVIDER_HPP
 
 #include <map>
 #include "Pool.hpp"
-#include "Allocator.hpp"
 
 namespace Memory
 {

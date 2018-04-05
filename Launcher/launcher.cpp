@@ -1,4 +1,4 @@
-#include "../Memory/Pool.hpp"
+#include <functional>
 
 #include "../Renderer/Window.hpp"
 #include "../Renderer/Shader.hpp"
@@ -6,8 +6,6 @@
 #include "../Renderer/Uniform.hpp"
 #include "../Renderer/Player.hpp"
 #include "../Renderer/Meshes.hpp"
-#include <functional>
-#include <memory>
 
 /* This binary should check for updates and update the data files, the client and itself for non-console platforms (If internet connection)
  * Update server should be just an SFTP or something, can have the key inside the source code.
@@ -38,24 +36,24 @@ int main(int argc, char* args[]) {
         return EXIT_FAILURE;
     }
 
-    auto windowObj = new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT);
+    auto* windowObj = new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_Window* window = windowObj->getWindow();
 
-    auto shader = new Renderer::Shader();
+    auto* shader = new Renderer::Shader();
     shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
     shader->createGraphicShader(GL_FRAGMENT_SHADER, "default.frag");
     shader->beginProgram();
 
-    auto texture = new Renderer::Uniform();
+    auto* texture = new Renderer::Uniform();
     texture->loadTexture("./data/launcher.png");
     texture->setUniform(shader->getShaderProgram(), UNIFORM_TYPE_TEXTURE);
     texture->setUniform(shader->getShaderProgram(), UNIFORM_TYPE_MAT4);
 
-    auto vertex = new Renderer::Vertex(shader->getShaderProgram());
-    auto meshes = new Renderer::Meshes();
+    auto* vertex = new Renderer::Vertex(shader->getShaderProgram());
+    auto* meshes = new Renderer::Meshes();
 
-    auto player1 = new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f);
-    auto player2 = new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f);
+    auto* player1 = new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f);
+    auto* player2 = new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f);
 
     loop =  [&] () -> bool
     {
@@ -107,7 +105,7 @@ int main(int argc, char* args[]) {
         meshes->insert(player2->getVertices(), player2->getTotalVertices());
 
         vertex->setBufferData(meshes->getByteSize(), meshes->get());
-        // Clear the screen to black
+        // Set screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -123,6 +121,7 @@ int main(int argc, char* args[]) {
 #else
     while(main_loop());
 #endif
+
     Memory::Provider::destroyPools();
     return EXIT_SUCCESS;
 }

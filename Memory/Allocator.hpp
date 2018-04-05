@@ -1,7 +1,3 @@
-//
-// Created by luiz0tavio on 3/28/18.
-//
-
 #ifndef ONYX_ALLOCATOR_HPP
 #define ONYX_ALLOCATOR_HPP
 
@@ -29,7 +25,7 @@ namespace Memory
                 std::cerr << "ERR: Size: " << std::to_string(size) << "bytes exceeds max." << std::endl;
             }
 
-            auto mem = Memory::Provider::getMemory(PoolType::POOL_TYPE_GENERIC, size);
+            auto* mem = Provider::getMemory(PoolType::POOL_TYPE_GENERIC, size);
             if ( T* p = static_cast<T*>(mem) ) return p;
             if ( T* p = (T *) malloc(size) ) return p;
 

@@ -54,7 +54,7 @@ std::string Renderer::Shader::loadShaderFileContent(std::string name)
 
     std::string content;
     std::ifstream fileStream(filePath, std::ios::in);
-    if(!fileStream.is_open()) {
+    if (!fileStream.is_open()) {
         std::cerr << "Could not read file " << filePath << ". File does not exist." << std::endl;
         return "";
     }
