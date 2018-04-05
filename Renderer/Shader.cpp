@@ -27,21 +27,27 @@ void Renderer::Shader::beginProgram()
 
 void Renderer::Shader::compileShader(GLuint shader)
 {
+    if (!glIsShader(shader)) {
+        std::cerr << "Shader " << std::to_string(shader) << " is actually not a shader!" << std::endl;
+        return;
+    }
+
     // Try compile Shader
     glCompileShader(shader);
 
     // Check if success compiled
-    GLint status;
+    GLint status = GL_FALSE;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
     if (status == GL_FALSE) {
-        std::string msg("Compile failure in shader:\n");
+        std::string msg = "Compile failure in shader:\n";
 
-        GLint infoLogLength;
+        GLint infoLogLength = 0;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-        auto strInfoLog = new char[infoLogLength + 1];
-        glGetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog);
-        msg += strInfoLog;
-        delete[] strInfoLog;
+        if (infoLogLength > 0) {
+            char strInfoLog[infoLogLength + 1] ;
+            glGetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog);
+            msg += strInfoLog;
+        }
 
         glDeleteShader(shader);
         std::cerr << msg << std::endl;

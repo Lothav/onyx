@@ -24,7 +24,8 @@ namespace Renderer {
 
         void  operator delete (void* ptr, std::size_t) {}
 
-        Window(const int screen_width, const int screen_height) : window(nullptr), renderer(nullptr) {
+        Window(const int screen_width, const int screen_height) : window(nullptr), renderer(nullptr)
+        {
             if (SDL_Init(SDL_INIT_VIDEO) < 0) {
                 std::cout << "Could not initialize sdl2: " << SDL_GetError();
                 return;

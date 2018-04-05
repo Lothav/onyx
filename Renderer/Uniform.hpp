@@ -56,6 +56,7 @@ namespace Renderer
             glGenTextures(1, &this->data[ UNIFORM_TYPE_TEXTURE ].id);
             glBindTexture(GL_TEXTURE_2D, this->data[ UNIFORM_TYPE_TEXTURE ].id);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surf->w, surf->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
+            free(surf);
 
             unsigned int error_code = glGetError();
             if (error_code != GL_NO_ERROR) {

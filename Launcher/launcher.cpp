@@ -19,9 +19,6 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
-std::function<bool()> loop;
-bool main_loop() { return loop(); }
-
 int main(int argc, char* args[]) {
 
     Memory::Provider::initPools();
@@ -35,9 +32,7 @@ int main(int argc, char* args[]) {
         std::cerr << "Could not initialize IMG's flags" << std::endl;
         return EXIT_FAILURE;
     }
-
-    auto* windowObj = new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT);
-    SDL_Window* window = windowObj->getWindow();
+    auto* window = new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     auto* shader = new Renderer::Shader();
     shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
@@ -55,7 +50,9 @@ int main(int argc, char* args[]) {
     auto* player1 = new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f);
     auto* player2 = new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f);
 
-    loop =  [&] () -> bool
+    auto* SDL_window = window->getWindow();
+
+    auto loop =  [&] () -> bool
     {
         SDL_Event e;
         while(SDL_PollEvent(&e))
@@ -109,18 +106,29 @@ int main(int argc, char* args[]) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(meshes->getSize()) );
-
-        SDL_GL_SwapWindow(window);
-
+        auto count_meshes = static_cast<GLsizei>(meshes->getSize());
+        glDrawArrays(GL_TRIANGLES, 0, count_meshes);
+        SDL_GL_SwapWindow(SDL_window);
+#ifdef DEBUG
+        return false;
+#else
         return true;
+#endif
     };
 
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(main_loop, 0, true);
+    emscripten_set_main_loop(loop, 0, true);
 #else
-    while(main_loop());
+    while(loop());
 #endif
+
+    delete(player2);
+    delete(player1);
+    delete(meshes);
+    delete(vertex);
+    delete(texture);
+    delete(shader);
+    delete(window);
 
     Memory::Provider::destroyPools();
     return EXIT_SUCCESS;
