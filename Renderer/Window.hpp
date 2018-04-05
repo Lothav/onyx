@@ -54,6 +54,7 @@ namespace Renderer {
         {
             SDL_DestroyRenderer(this->renderer);
             SDL_DestroyWindow(this->window);
+            SDL_Quit();
         }
 
         SDL_Window* getWindow() {
