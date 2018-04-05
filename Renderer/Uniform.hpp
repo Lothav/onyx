@@ -42,6 +42,13 @@ namespace Renderer
             glDeleteTextures(1, &this->data[ UNIFORM_TYPE_TEXTURE ].id);
         }
 
+        void * operator new (std::size_t size)
+        {
+            return Memory::Provider::getMemory(Memory::PoolType::POOL_TYPE_GENERIC, size);
+        }
+
+        void  operator delete (void* ptr, std::size_t) {}
+
         void loadTexture(std::string path)
         {
             SDL_Surface* surf = IMG_Load(path.c_str());
@@ -68,14 +75,14 @@ namespace Renderer
                 return;
             }
 
-            if(type == UNIFORM_TYPE_TEXTURE) {
+            if (type == UNIFORM_TYPE_TEXTURE) {
                 glActiveTexture(GL_TEXTURE0 + 0);
                 glBindTexture(GL_TEXTURE_2D, this->data[ UNIFORM_TYPE_TEXTURE ].id);
                 glUniform1i(uniformAtt, 0);
                 return;
             }
 
-            if(type == UNIFORM_TYPE_MAT4) {
+            if (type == UNIFORM_TYPE_MAT4) {
                 glUniformMatrix4fv(uniformAtt, 1, GL_FALSE, &this->view_camera[0][0]);
             }
         }

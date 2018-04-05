@@ -20,6 +20,15 @@ namespace Renderer
 
         Meshes(): meshes({}) {}
 
+
+        void * operator new (std::size_t size)
+        {
+            return Memory::Provider::getMemory(Memory::PoolType::POOL_TYPE_GENERIC, size);
+        }
+
+        void  operator delete (void* ptr, std::size_t) {}
+
+
         void insert(GLfloat* mesh, unsigned int meshes_size)
         {
             for(unsigned int i = 0; i < meshes_size; i++) this->meshes.push_back(mesh[i]);

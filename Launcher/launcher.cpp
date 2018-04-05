@@ -6,7 +6,6 @@
 #include "../Renderer/Uniform.hpp"
 #include "../Renderer/Player.hpp"
 #include "../Renderer/Meshes.hpp"
-#include "../Memory/Allocator.hpp"
 #include <functional>
 #include <memory>
 
@@ -29,14 +28,6 @@ int main(int argc, char* args[]) {
 
     Memory::Provider::initPool();
 
-    std::vector<int, Memory::Allocator<int>> vec;
-    vec.push_back(3);
-    vec.push_back(4);
-    vec.push_back(4);
-    vec.push_back(4);
-    vec.push_back(4);
-    vec.push_back(4);
-
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
         return EXIT_FAILURE;
@@ -47,29 +38,24 @@ int main(int argc, char* args[]) {
         return EXIT_FAILURE;
     }
 
-    auto windowObj = std::unique_ptr<Renderer::Window>( new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT) );
+    auto windowObj = new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_Window* window = windowObj->getWindow();
 
-    auto shader = std::unique_ptr<Renderer::Shader>( new Renderer::Shader() );
+    auto shader = new Renderer::Shader();
     shader->createGraphicShader(GL_VERTEX_SHADER, "default.vert");
     shader->createGraphicShader(GL_FRAGMENT_SHADER, "default.frag");
     shader->beginProgram();
 
-    Memory::Provider::destroyPool();
-
-    return 0;
-
-
-    auto texture = std::make_unique<Renderer::Uniform>();
+    auto texture = new Renderer::Uniform();
     texture->loadTexture("./data/launcher.png");
     texture->setUniform(shader->getShaderProgram(), UNIFORM_TYPE_TEXTURE);
     texture->setUniform(shader->getShaderProgram(), UNIFORM_TYPE_MAT4);
 
-    auto vertex = std::unique_ptr<Renderer::Vertex>( new Renderer::Vertex(shader->getShaderProgram()) );
-    auto meshes = std::unique_ptr<Renderer::Meshes>( new Renderer::Meshes() );
+    auto vertex = new Renderer::Vertex(shader->getShaderProgram());
+    auto meshes = new Renderer::Meshes();
 
-    auto player1 = std::unique_ptr<Renderer::Player>( new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f) );
-    auto player2 = std::unique_ptr<Renderer::Player>( new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f) );
+    auto player1 = new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f);
+    auto player2 = new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f);
 
     loop =  [&] () -> bool
     {
@@ -137,5 +123,6 @@ int main(int argc, char* args[]) {
 #else
     while(main_loop());
 #endif
+    Memory::Provider::destroyPool();
     return EXIT_SUCCESS;
 }

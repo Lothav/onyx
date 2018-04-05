@@ -43,6 +43,13 @@ namespace Renderer
             };
         }
 
+        void * operator new (std::size_t size)
+        {
+            return Memory::Provider::getMemory(Memory::PoolType::POOL_TYPE_GENERIC, size);
+        }
+
+        void  operator delete (void* ptr, std::size_t) {}
+
         GLfloat* getVertices()
         {
             return this->vertices.data();
