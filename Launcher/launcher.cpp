@@ -26,7 +26,7 @@ bool main_loop() { return loop(); }
 
 int main(int argc, char* args[]) {
 
-    Memory::Provider::initPool();
+    Memory::Provider::initPools();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "Could not initialize sdl2: " << SDL_GetError() << std::endl;
@@ -123,6 +123,6 @@ int main(int argc, char* args[]) {
 #else
     while(main_loop());
 #endif
-    Memory::Provider::destroyPool();
+    Memory::Provider::destroyPools();
     return EXIT_SUCCESS;
 }

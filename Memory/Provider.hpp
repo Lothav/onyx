@@ -7,16 +7,30 @@
 
 #include <map>
 #include "Pool.hpp"
+#include "Allocator.hpp"
 
 namespace Memory
 {
     class Provider
     {
+
+    private:
+
+        /* Store memory pools by type.
+         * This map perform a dynamic allocation. */
+        static std::map <const PoolType,Pool*> _poolMap;
+
     public:
-        static std::map<PoolType, Pool*> PoolMap;
-        static void initPool();
-        static void* getMemory(Memory::PoolType type, std::size_t size);
-        static void destroyPool();
+
+        /* Alloc memory pools.
+         * Must call destroyPool() to avoid memory leak. */
+        static void initPools();
+
+        /* Destroy memory pool. */
+        static void destroyPools() noexcept;
+
+        /* Circular buffer-like memory gatherer by PoolType */
+        static void* getMemory(PoolType type, std::size_t size);
     };
 }
 

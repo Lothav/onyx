@@ -25,7 +25,6 @@ Memory::Pool::Pool(PoolType type, std::size_t size) {
     }
 }
 
-
 void Memory::Pool::destroy()
 {
     std::free(mem_pool_);

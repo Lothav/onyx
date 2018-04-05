@@ -24,17 +24,16 @@ namespace Memory
 
         T* allocate(std::size_t size) noexcept
         {
-            std::cout << "pushin " << std::to_string(size) << "bytes." << std::endl;
-
             auto max = std::numeric_limits<size_t>::max() / sizeof(T);
             if (size > max) {
                 std::cerr << "ERR: Size: " << std::to_string(size) << "bytes exceeds max." << std::endl;
             }
 
-            auto mem = Memory::Provider::getMemory(PoolType::POOL_TYPE_GENERIC, sizeof(T));
-            if ( auto p = static_cast<T*>(mem) ) return p;
+            auto mem = Memory::Provider::getMemory(PoolType::POOL_TYPE_GENERIC, size);
+            if ( T* p = static_cast<T*>(mem) ) return p;
+            if ( T* p = (T *) malloc(size) ) return p;
 
-            std::cerr << "ERR: Cannot get memory. Size: " << std::to_string(size) << "bytes." << std::endl;
+            std::cerr << "ERR: Cannot get/alloc memory. Size: " << std::to_string(size) << "bytes." << std::endl;
         }
 
         void deallocate(T* p, std::size_t) noexcept

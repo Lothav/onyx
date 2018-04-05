@@ -1,24 +1,20 @@
-//
-// Created by luiz0tavio on 3/28/18.
-//
-
 #include "Provider.hpp"
 
-std::map<Memory::PoolType, Memory::Pool*> Memory::Provider::PoolMap = {};
-
-void Memory::Provider::initPool()
+void Memory::Provider::initPools()
 {
-    PoolMap[PoolType::POOL_TYPE_GENERIC] = new Memory::Pool(PoolType::POOL_TYPE_GENERIC, 500000);
+    for (auto& poolInfo: PoolsInfo) {
+        _poolMap[poolInfo.type] = new Memory::Pool(poolInfo.type, poolInfo.size);
+    }
 }
 
 void* Memory::Provider::getMemory(Memory::PoolType type, std::size_t size)
 {
-    return PoolMap[type]->get(size);
+    return _poolMap[type]->get(size);
 }
 
-void Memory::Provider::destroyPool ()
+void Memory::Provider::destroyPools () noexcept
 {
-    for(auto& pool : PoolMap) {
+    for(auto& pool : _poolMap) {
         pool.second->destroy();
     }
 };
