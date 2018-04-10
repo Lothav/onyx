@@ -28,10 +28,11 @@ int main(int argc, char* args[]) {
         return EXIT_FAILURE;
     }
 
-    if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == 0) {
+    if (IMG_Init(IMG_INIT_PNG) == 0) {
         std::cerr << "Could not initialize IMG's flags" << std::endl;
         return EXIT_FAILURE;
     }
+
     auto* window = new Renderer::Window(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     auto* shader = new Renderer::Shader();
@@ -40,14 +41,15 @@ int main(int argc, char* args[]) {
     shader->beginProgram();
 
     auto* texture = new Renderer::Uniform();
-    texture->loadTexture("./data/launcher.png");
+    //texture->loadTexture("./data/launcher.png");
+    texture->loadTexture("./data/dices.png");
     texture->setUniform(shader->getShaderProgram(), UNIFORM_TYPE_TEXTURE);
     texture->setUniform(shader->getShaderProgram(), UNIFORM_TYPE_MAT4);
 
     auto* vertex = new Renderer::Vertex(shader->getShaderProgram());
     auto* meshes = new Renderer::Meshes();
 
-    auto* player1 = new Renderer::Player(0.5f, 0.0f, 1.0f, 0.5f);
+    auto* player1 = new Renderer::Player( 0.5f, 0.0f, 1.0f, 0.5f);
     auto* player2 = new Renderer::Player(-0.5f, 0.0f, 1.0f, 0.5f);
 
     auto* SDL_window = window->getWindow();
@@ -121,14 +123,6 @@ int main(int argc, char* args[]) {
 #else
     while(loop());
 #endif
-
-    delete(player2);
-    delete(player1);
-    delete(meshes);
-    delete(vertex);
-    delete(texture);
-    delete(shader);
-    delete(window);
 
     Memory::Provider::destroyPools();
     return EXIT_SUCCESS;

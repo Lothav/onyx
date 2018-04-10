@@ -47,7 +47,10 @@ namespace Renderer
             return Memory::Provider::getMemory(Memory::PoolType::POOL_TYPE_GENERIC, size);
         }
 
-        void  operator delete (void* ptr, std::size_t) {}
+        void  operator delete (void* ptr, std::size_t)
+        {
+            std::cerr << "call delete for non-delete heap memory!" << std::endl;
+        }
 
         void loadTexture(std::string path)
         {
@@ -55,7 +58,10 @@ namespace Renderer
 
             glGenTextures(1, &this->data[ UNIFORM_TYPE_TEXTURE ].id);
             glBindTexture(GL_TEXTURE_2D, this->data[ UNIFORM_TYPE_TEXTURE ].id);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surf->w, surf->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, surf->w, surf->h);
+
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surf->w, surf->h, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
+
             free(surf);
 
             unsigned int error_code = glGetError();
@@ -63,9 +69,12 @@ namespace Renderer
                 std::cerr << "OpenGL error glTexImage2D. Error code: " << std::to_string(error_code) << std::endl;
             }
 
-            /* Linear Filtering */
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+            glGenerateMipmap(GL_TEXTURE_2D);
         }
 
         void setUniform(GLuint shader_program, UniformType type)

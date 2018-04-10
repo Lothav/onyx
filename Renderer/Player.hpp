@@ -48,7 +48,10 @@ namespace Renderer
             return Memory::Provider::getMemory(Memory::PoolType::POOL_TYPE_GENERIC, size);
         }
 
-        void  operator delete (void* ptr, std::size_t) {}
+        void  operator delete (void* ptr, std::size_t)
+        {
+            std::cerr << "call delete for non-delete heap memory!" << std::endl;
+        }
 
         GLfloat* getVertices()
         {

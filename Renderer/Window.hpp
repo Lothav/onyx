@@ -22,7 +22,10 @@ namespace Renderer {
             return Memory::Provider::getMemory(Memory::PoolType::POOL_TYPE_GENERIC, size);
         }
 
-        void  operator delete (void* ptr, std::size_t) {}
+        void  operator delete (void* ptr, std::size_t)
+        {
+            std::cerr << "call delete for non-delete heap memory!" << std::endl;
+        }
 
         Window(const int screen_width, const int screen_height) : window(nullptr), renderer(nullptr)
         {
@@ -34,7 +37,7 @@ namespace Renderer {
                 "Onyx Launcher",
                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 screen_width, screen_height,
-                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_INPUT_FOCUS
             );
             if (this->window == nullptr) {
                 fprintf(stderr, "Could not create window: %s\n", SDL_GetError());
